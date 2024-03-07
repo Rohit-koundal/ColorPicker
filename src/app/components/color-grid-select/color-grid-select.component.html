@@ -1,43 +1,15 @@
-<div class="container max-w-screen-4xl card mt-5 h-96 mb-5" >
+<div class="container mt-5 mb-5">
   <div class="row ">
-   
-    <div class="col-md-12 col-sm-12 text-center text-3xl">
-        <p class="h1 font-medium text-center mt-5 ring-sky-200 font-serif	font-family: ui-serif, Georgia, Cambria, Times New Roman, Times, serif;">Box Color Generator</p>
-        <div class="color-grid card">
-            <div
-            *ngFor="let color of colors; let i = index"
-    class="color"
-    [style.background-color]="color"
-    [class.selected]="color === selectedColor"
-    (click)="selectColor(color);editColor(color,i);"
-    tabindex="0"
-    [attr.row]="calculateRow(i)"
-    [attr.col]="(i % gridColumns) + 1"
-    (keyup.enter)="selectColor(color);editColor(color,i);"
-    #colorElement
-            ></div>
-            <div class="app-color-picker">
-                <div class="preview">
-                 <div class="preview-background">
-                    <label class="material-symbols-outlined" style="justify-content: center;
-                    display: flex;
-                    margin-left: -16px;
-                    width: 35px;">
-                    <input [(colorPicker)]="color" class="circle"
-                    [cpPosition]="'right'"
-                    [cpOutputFormat]="'rgba'"
-                    [cpOKButton]="true"
-                    [(cpToggle)]="toggle"
-                    
-                    [(colorPicker)]="EditColor?selectedColor:color" (colorPickerClose)="EditColor?changeColor(color,index):changeColor(color)">
-                    add_circle
-                    </label>   
-                            
-                    </div>
-                </div>
-                 
-                  
-              </div>
-          </div>
-    </div> </div>
+    <div class="col-md-6 col-sm-6 text-center color-grid text-center">
+      <div *ngFor="let color of colors; let i = index" class="color" [style.background-color]="color"
+        [class.selected]="color === selectedColor" (click)="selectColor(color);" tabindex="0"
+        [attr.row]="calculateRow(i)" [attr.col]="(i % gridColumns) + 1"
+        (keyup.enter)="selectColor(color);" (keydown)="onKeyPress($event)" #colorElementArray>
+      </div>
+    </div>
+  </div>
+  
+  <app-item-display-color [displayValue]="outputValue"></app-item-display-color>
+
+  <button class="btn btn-secondary" (click)="calculateGrid(true)">Reset</button>
 </div>

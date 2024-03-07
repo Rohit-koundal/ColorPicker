@@ -8,31 +8,10 @@ describe('ColorGridSelectComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ColorGridSelectComponent],
-    });
+    }).compileComponents();
+
     fixture = TestBed.createComponent(ColorGridSelectComponent);
     component = fixture.componentInstance;
-    component.colors = [
-      "rgba(245 ,158, 11 ,1)"
-      ,"rgba(250 ,204 ,21, 1)"
-      ,"rgba(132, 204, 22, 1)"
-      ,"rgba(34, 197, 94,1)"
-      ,"rgba(52, 211, 153, 1)"
-      ,"rgba(94, 234 ,212, 1)"
-      ,"rgba(34, 211 ,238, 1)"
-      ,"rgba(14, 165, 233, 1)"
-      ,"rgba(37, 99 ,235, 1)"
-      ,"rgba(79, 70 ,229, 1)"
-      ,"rgba(124, 58 ,237, 1)"
-      ,"rgba(147 ,51, 234, 1)"
-      ,"rgba(192 ,38, 211, 1)"
-      ,"rgba(236, 72 ,153, 1)"
-      ,"rgba(236, 72 ,159, 1)"
-      ,"rgba(236, 72 ,155, 1)"
-      ,"rgba(236, 72 ,154, 1)"
-      ,"rgba(236, 72 ,151, 1)"
-      ,"rgba(236, 72 ,159, 1)"
-      ,"rgba(225 ,29 ,72, 1)"
-      ];
     fixture.detectChanges();
   });
 
@@ -40,41 +19,39 @@ describe('ColorGridSelectComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should handle color selection', () => {
-    spyOn(component, 'onChange');
-    spyOn(component, 'onTouch');
+  it('should handle input changes', () => {
+    const colors = ['color1', 'color2', 'color3'];
+    component.colors = colors;
+    fixture.detectChanges();
 
-    component.selectColor('rgba(245 ,158, 11 ,1)');
-
-    expect(component.selectedColor).toBe('rgba(245 ,158, 11 ,1)');
-    expect(component.onChange).toHaveBeenCalledWith('rgba(245 ,158, 11 ,1)');
-    expect(component.onTouch).toHaveBeenCalled();
+    expect(component.colors).toEqual(colors);
   });
 
-  it('should handle value changes', () => {
-    component.writeValue('rgba(245 ,158, 11 ,1)');
-    expect(component.selectedColor).toBe('rgba(245 ,158, 11 ,1)');
+  it('should select color on click', () => {
+    const color = 'selectedColor';
+    spyOn(component, 'selectColor');
+    component.colors = [color];
+    fixture.detectChanges();
+
+    const colorElement = fixture.debugElement.nativeElement.querySelector('.color');
+    colorElement.click();
+
+    expect(component.selectColor).toHaveBeenCalledWith(color);
   });
 
-  it('should disable the component', () => {
-    component.setDisabledState(true);
-    expect(component.isDisabled).toBe(true);
-  });
-
-  it('should calculate the grid layout', () => {
-    component.calculateGrid();
-    // Add expectations based on your grid layout calculation
-    // For example, you can check if grid-template-columns and grid-template-rows are set correctly.
-  });
-
-  it('should handle keyboard navigation', () => {
+  it('should handle arrow key navigation', () => {
     spyOn(component, 'navigate');
-    spyOn(component, 'setFocus');
-
     const event = new KeyboardEvent('keydown', { key: 'ArrowUp' });
-    component.handleKeyboardEvent(event);
+    document.dispatchEvent(event);
 
-    expect(component.navigate).toHaveBeenCalledWith(-10);
-    // Add expectations for setFocus and other relevant checks
+    expect(component.navigate).toHaveBeenCalledWith('ArrowUp');
+  });
+
+  it('should update grid on window resize', () => {
+    spyOn(component, 'calculateGrid');
+    const event = new Event('resize');
+    window.dispatchEvent(event);
+
+    expect(component.calculateGrid).toHaveBeenCalled();
   });
 });
