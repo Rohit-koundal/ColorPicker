@@ -5,7 +5,7 @@ import { Component, input } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './item-display-color.component.html',
-  styleUrl: './item-display-color.component.sass'
+  styleUrl: './item-display-color.component.scss'
 })
 export class ItemDisplayColorComponent {
    displayValue=input("");
